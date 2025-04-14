@@ -9,10 +9,26 @@ import { DemandeModule } from './demande/demande.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import {
+  isEmailUniqueConstraint,
+  isNumberUniqueConstraint,
+} from './common/validators/is-unique.validator';
+import { ValidatorsModule } from './common/validators/validators.module';
 
 @Module({
-  imports: [DatabaseModule, UtilisateurModule, DemandeModule, AuthModule],
+  imports: [
+    DatabaseModule,
+    UtilisateurModule,
+    DemandeModule,
+    AuthModule,
+    ValidatorsModule,
+  ],
   controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  providers: [
+    AppService,
+    AuthService,
+    isEmailUniqueConstraint,
+    isNumberUniqueConstraint,
+  ],
 })
 export class AppModule {}

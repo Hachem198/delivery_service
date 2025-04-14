@@ -1,17 +1,26 @@
 import { DatabaseService } from 'src/database/database.service';
 import { CreateUtilisateurDto } from '../dto/create-utilisateur.dto';
 import { Injectable } from '@nestjs/common';
+import { HashService } from 'src/auth/hash/hash.service';
 
 @Injectable()
 export class UtilisateurRepository {
-  constructor(private databaseService: DatabaseService) {}
-  async create(utilisateur: CreateUtilisateurDto) {
+  constructor(
+    private databaseService: DatabaseService,
+    private hashService: HashService,
+  ) {}
+
+  async register(user: CreateUtilisateurDto) {
+    const hashedMotDePass = await this.hashService.hashPassword(user.motDePass);
     return this.databaseService.utilisateur.create({
       data: {
-        nom: utilisateur.nom,
-        prenom: utilisateur.prenom,
-        email: utilisateur.email,
-        numero: utilisateur.numero,
+        nom: user.nom,
+        prenom: user.prenom,
+        numero: user.numero,
+        email: user.email,
+        motDePass: hashedMotDePass,
+        confirmationMotDePass: user.confirmationMotDePass,
+        role: user.role,
       },
     });
   }

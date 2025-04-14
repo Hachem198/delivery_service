@@ -17,8 +17,8 @@ export class UtilisateurController {
   constructor(private utilisateurService: UtilisateurService) {}
 
   @Post()
-  create(@Body() createUtlisateurDto: CreateUtilisateurDto) {
-    return this.utilisateurService.create(createUtlisateurDto);
+  register(@Body() createUtilisateurDto: CreateUtilisateurDto) {
+    return this.utilisateurService.register(createUtilisateurDto);
   }
 
   @Get()

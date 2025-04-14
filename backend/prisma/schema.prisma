@@ -17,8 +17,10 @@ model Utilisateur{
   idUtilisateur Int @id @default(autoincrement())
   nom String
   prenom String
-  email String
-  numero Int
+  email String @unique
+  numero String @unique
+  motDePass String
+  confirmationMotDePass String
   role    Role    @default(CLIENT) 
   Demande Demande[]
 }

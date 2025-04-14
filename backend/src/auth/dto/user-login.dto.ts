@@ -4,5 +4,5 @@ export class UserLoginDto {
   @IsEmail()
   email: string;
   @IsString()
-  password: string;
+  motDePass: string;
 }

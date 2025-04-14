@@ -7,8 +7,8 @@ import { DatabaseService } from 'src/database/database.service';
 @Injectable()
 export class UtilisateurService {
   constructor(private repository: UtilisateurRepository) {}
-  async create(createUtilisateurDto: CreateUtilisateurDto) {
-    return this.repository.create(createUtilisateurDto);
+  async register(createUtilisateurDto: CreateUtilisateurDto) {
+    return this.repository.register(createUtilisateurDto);
   }
 
   async findAll() {
