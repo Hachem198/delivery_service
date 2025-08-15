@@ -1,5 +1,8 @@
 export class UserDataDto {
-  nom: string;
-  prenom: string;
+  id: number;
+  firstName: string;
+  lastName: string;
   role: string;
+  number: string;
+  email: string;
 }

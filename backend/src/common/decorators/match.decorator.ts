@@ -4,7 +4,7 @@ import {
   ValidationOptions,
 } from 'class-validator';
 export function Match(property: string, validatorOptions?: ValidationOptions) {
-  return function (object: any, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'match',
       target: object.constructor,

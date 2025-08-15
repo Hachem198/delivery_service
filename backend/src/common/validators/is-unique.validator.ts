@@ -1,9 +1,6 @@
 import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  ValidationArguments,
-  registerDecorator,
-  ValidationOptions,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
@@ -12,13 +9,13 @@ import { DatabaseService } from 'src/database/database.service';
 @Injectable()
 export class isEmailUniqueConstraint implements ValidatorConstraintInterface {
   constructor(private readonly databaseService: DatabaseService) {}
-  async validate(email: string, args: ValidationArguments): Promise<boolean> {
-    const utilisateur = await this.databaseService.utilisateur.findUnique({
+  async validate(email: string): Promise<boolean> {
+    const user = await this.databaseService.user.findUnique({
       where: { email },
     });
-    return !utilisateur;
+    return !user;
   }
-  defaultMessage(args: ValidationArguments): string {
+  defaultMessage(): string {
     return 'Email already exists!';
   }
 }
@@ -27,13 +24,13 @@ export class isEmailUniqueConstraint implements ValidatorConstraintInterface {
 @Injectable()
 export class isNumberUniqueConstraint implements ValidatorConstraintInterface {
   constructor(private readonly databaseService: DatabaseService) {}
-  async validate(numero: string, args: ValidationArguments): Promise<boolean> {
-    const utilisateur = await this.databaseService.utilisateur.findUnique({
-      where: { numero },
+  async validate(number: string): Promise<boolean> {
+    const user = await this.databaseService.user.findUnique({
+      where: { number },
     });
-    return !utilisateur;
+    return !user;
   }
-  defaultMessage(args: ValidationArguments): string {
+  defaultMessage(): string {
     return 'Number already exists!';
   }
 }

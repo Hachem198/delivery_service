@@ -1,21 +1,12 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import PickUpAutoComplete from "./GooglePlacesAutoComplete/PickUpAutoComplete";
+import { useState } from "react";
 import DestAutoComplete from "./GooglePlacesAutoComplete/DestAutoComplete";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import PickUpAutoComplete from "./GooglePlacesAutoComplete/PickUpAutoComplete";
+import BasicTimePicker from "./ui/BasicTimePicker";
 import ComboBoxServices from "./ui/ComboBoxColis/ComboBoxServices";
 import ComboBoxTypeProduits from "./ui/ComboBoxColis/ComboBoxTypeProduits";
 import DatePicker from "./ui/DatePicker";
-import BasicTimePicker from "./ui/BasicTimePicker";
-import { set } from "date-fns";
+
 export default function ReservationSpace() {
-  const [camionChoisie, setCamionChoisie] = useState();
   const [selectedService, setSelectedService] = useState("");
   return (
     //desktop navigation

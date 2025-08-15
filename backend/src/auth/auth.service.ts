@@ -1,28 +1,61 @@
 import { Injectable } from '@nestjs/common';
-import { UserLoginDto  } from './dto/user-login.dto';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
+import { AuthResultDto } from './dto/auth-result.dto';
+import { UserDataDto } from './dto/user-data.dto';
+import { UserLoginDto } from './dto/user-login.dto';
 import { HashService } from './hash/hash.service';
 import { AuthRepository } from './repositories/auth.repository';
-import { UserDataDto } from './dto/user-data.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private hashService : HashService , private authRepo : AuthRepository){}
-  async findUserByEmail(user: UserLoginDto) {
-    return this.authRepo.findUserByEmail(user);
+  constructor(
+    private hashService: HashService,
+    private authRepo: AuthRepository,
+    private jwtService: JwtService,
+    private userService: UserService,
+  ) {}
+
+  async authenticate(user: UserLoginDto): Promise<AuthResultDto> {
+    const userFound = await this.validateUser(user);
+    return this.signIn(userFound);
   }
   async validateUser(user: UserLoginDto): Promise<UserDataDto | null> {
-    const userFound = await this.findUserByEmail(user);
+    const userFound = await this.userService.findUserByEmail(user.email);
+
     if (
       userFound &&
-      this.hashService.comparePassword(user.motDePass, userFound.motDePass)
+      (await this.hashService.comparePassword(
+        user.password,
+        userFound.password,
+      ))
     ) {
       return {
-        nom: userFound.nom,
-        prenom: userFound.prenom,
+        id: userFound.userId,
+        firstName: userFound.firstName,
+        lastName: userFound.lastName,
         role: userFound.role,
+        email: userFound.email,
+        number: userFound.number,
       };
     }
     return null;
   }
-}
+  async signIn(user: UserDataDto): Promise<AuthResultDto> {
+    const tokenPayload = {
+      sub: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      number: user.number,
+      email: user.email,
+    };
+    const accessToken = await this.jwtService.signAsync(tokenPayload);
+    return {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      accessToken: accessToken,
+    };
+  }
 }
