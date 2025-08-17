@@ -12,9 +12,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export default function DatePicker() {
-  const [date, setDate] = useState(null); // Start with null to indicate no date selected
-
+export default function DatePicker({ date, setDate }) {
   return (
     <Popover>
       <PopoverTrigger asChild>

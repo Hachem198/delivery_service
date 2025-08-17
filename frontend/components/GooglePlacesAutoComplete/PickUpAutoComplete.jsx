@@ -1,100 +1,75 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
-import { useLoadScript } from "@react-google-maps/api";
+import React, { useState, useRef } from "react";
+import axios from "axios";
 
-export default function PickUpAutoComplete() {
-  const libraries = ["places"];
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.apiKey,
-    libraries,
-  });
-  const [input, setInput] = useState({});
+export default function PickUpAutoComplete({
+  pickUpLocation,
+  setPickUpLocation,
+}) {
+  const [results, setResults] = useState([]);
   const inputRef = useRef(null);
-  useEffect(() => {
-    if (!isLoaded || loadError) return;
 
-    const options = {
-      componentRestrictions: { country: "TN" },
-      fields: ["address_components", "geometry"],
-    };
+  const handleChange = async (e) => {
+    const value = e.target.value;
+    setPickUpLocation(value);
 
-    const autocomplete = new google.maps.places.Autocomplete(
-      inputRef.current,
-      options
-    );
-    autocomplete.addListener("place_changed", () =>
-      handlePlaceChanged(autocomplete)
-    );
-
-    // return () => autocomplete.removeListener("place_changed", handlePlaceChanged);
-  }, [isLoaded, loadError]);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setInput((values) => ({ ...values, [name]: value }));
-  };
-  const handlePlaceChanged = async (address) => {
-    if (!isLoaded) return;
-    const place = address.getPlace();
-
-    if (!place || !place.geometry) {
-      setInput({});
-      return;
-    }
-    formData(place);
-  };
-  const formData = (data) => {
-    const addressComponents = data?.address_components;
-
-    const componentMap = {
-      subPremise: "",
-      premise: "",
-      street_number: "",
-      route: "",
-      country: "",
-      postal_code: "",
-      administrative_area_level_2: "",
-      administrative_area_level_1: "",
-    };
-
-    for (const component of addressComponents) {
-      const componentType = component.types[0];
-      if (componentMap.hasOwnProperty(componentType)) {
-        componentMap[componentType] = component.long_name;
+    if (value.length > 2) {
+      try {
+        const res = await axios.get(
+          "https://api.radar.io/v1/search/autocomplete",
+          {
+            params: {
+              query: value,
+              near: "36.8065,10.1815", // Bias results near Tunis (you can pass dynamic coords)
+              limit: 5,
+            },
+            headers: {
+              Authorization: process.env.NEXT_PUBLIC_RADAR_API_KEY,
+            },
+          }
+        );
+        setResults(res.data.addresses || []);
+      } catch (err) {
+        console.error("Radar API error:", err);
       }
+    } else {
+      setResults([]);
     }
-
-    const formattedAddress =
-      `${componentMap.subPremise} ${componentMap.premise} ${componentMap.street_number} ${componentMap.route}`.trim();
-    const latitude = data?.geometry?.location?.lat();
-    const longitude = data?.geometry?.location?.lng();
-
-    setInput((values) => ({
-      ...values,
-      streetAddress: formattedAddress,
-      country: componentMap.country,
-      zipCode: componentMap.postal_code,
-      city: componentMap.administrative_area_level_2,
-      state: componentMap.administrative_area_level_1,
-      latitude: latitude,
-      longitude: longitude,
-    }));
   };
+
+  const handleSelect = (address) => {
+    setPickUpLocation(address.formattedAddress);
+    setResults([]); // clear dropdown after selection
+  };
+
   return (
-    isLoaded && (
-      <div>
-        <div className="flex flex-col  rounded-3xl ">
-          <label className="text-md">Street</label>
-          <input
-            className="h-[40px] rounded-md w-full"
-            type="text"
-            name="streetAdress"
-            ref={inputRef}
-            value={input.streetAddress || ""}
-            onChange={handleChange}
-            required
-          ></input>
-        </div>
+    <div>
+      <div className="flex flex-col rounded-3xl">
+        <label className="text-md">Street</label>
+        <input
+          className="h-[40px] rounded-md w-full border px-2"
+          type="text"
+          name="streetAdress"
+          ref={inputRef}
+          value={pickUpLocation || ""}
+          onChange={handleChange}
+          required
+        />
       </div>
-    )
+
+      {results.length > 0 && (
+        <ul className="border rounded-md mt-1 bg-white shadow-md max-h-40 overflow-y-auto">
+          {results.map((place, i) => (
+            <li
+              key={i}
+              className="p-2 hover:bg-gray-100 cursor-pointer"
+              onClick={() => handleSelect(place)}
+            >
+              {place.formattedAddress}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

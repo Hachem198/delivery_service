@@ -46,4 +46,8 @@ export class DeliveriesService {
   assignDelivery(id: number, courierId: number) {
     return this.repository.assignDelivery(id, courierId);
   }
+
+  findMyDeliveries(userId: number) {
+    return this.repository.findMyDeliveries(userId);
+  }
 }

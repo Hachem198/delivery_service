@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 
 import { DatabaseModule } from './database/database.module';
 import { PassportAuthController } from './auth/passport-auth.controller';
-import { UserModule } from './user/user.module';
+import { UserModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import {

@@ -5,11 +5,13 @@ import { HashService } from './hash/hash.service';
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthRepository } from './repositories/auth.repository';
 import { JwtModule } from '@nestjs/jwt';
-import { UserModule } from 'src/user/user.module';
-import { UserService } from 'src/user/user.service';
+import { UserModule } from 'src/users/users.module';
+import { UsersService } from 'src/users/users.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PassportAuthController } from './passport-auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { RolesGuard } from './guards/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -23,10 +25,14 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   ],
   controllers: [PassportAuthController],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
     AuthService,
     HashService,
     AuthRepository,
-    UserService,
+    UsersService,
     LocalStrategy,
     JwtStrategy,
   ],

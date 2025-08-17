@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 
-export default function BasicTimePicker() {
+export default function BasicTimePicker({ time, setTime }) {
   return (
     <form className="max-w-[8rem] ">
       <div className="relative">
@@ -27,6 +27,8 @@ export default function BasicTimePicker() {
           min="09:00"
           max="18:00"
           required
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
         />
       </div>
     </form>

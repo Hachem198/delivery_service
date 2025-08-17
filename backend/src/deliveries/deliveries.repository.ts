@@ -69,4 +69,12 @@ export class DeliveriesRepository {
       data: { assignedCourierId: courierId },
     });
   }
+  async findMyDeliveries(userId: number) {
+    return this.databaseService.delivery.findMany({
+      where: { clientId: userId },
+      include: {
+        assignedCourier: true,
+      },
+    });
+  }
 }

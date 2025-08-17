@@ -20,7 +20,10 @@ import {
   PopoverTrigger,
 } from "../../../components/ui/popover";
 
-export default function ComboBoxTypeProduits({ service }) {
+export default function ComboBoxTypeProduits({
+  service,
+  setSelectedProductType,
+}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -59,6 +62,7 @@ export default function ComboBoxTypeProduits({ service }) {
                       key={TypeProduit.value}
                       value={TypeProduit.value}
                       onSelect={(currentValue) => {
+                        setSelectedProductType(currentValue);
                         setValue(currentValue === value ? "" : currentValue);
                         setOpen(false);
                       }}

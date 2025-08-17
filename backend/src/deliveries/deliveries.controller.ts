@@ -15,12 +15,13 @@ import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { PassportJwtAuthGuard } from 'src/auth/guards/passport-jwt.guard';
 import { State } from '@prisma/client';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @UseGuards(PassportJwtAuthGuard)
 @Controller('deliveries')
 export class DeliveriesController {
   constructor(private readonly deliveriesService: DeliveriesService) {}
-
+  @Roles('CLIENT')
   @Post()
   create(@Request() req, @Body() createDeliveryDto: CreateDeliveryDto) {
     return this.deliveriesService.createDelivery(
@@ -28,11 +29,16 @@ export class DeliveriesController {
       createDeliveryDto,
     );
   }
+  @Roles('DELIVERY_PERSON')
   @Get('assigned')
   findAssignedDeliveries(@Request() req) {
     return this.deliveriesService.findAssignedDeliveries(req.user.userId);
   }
-  @Get('/')
+  @Get('/mine')
+  findMyDeliveries(@Request() req) {
+    return this.deliveriesService.findMyDeliveries(req.user.userId);
+  }
+  @Roles('ADMIN')
   @Get()
   findAllDeliveries() {
     return this.deliveriesService.findAllDeliveries();
@@ -42,11 +48,12 @@ export class DeliveriesController {
   findDelivery(@Request() req, @Param('id') id: string) {
     return this.deliveriesService.findDelivery(req.user.userId, +id);
   }
-
+  @Roles('ADMIN', 'DELIVERY_PERSON')
   @Patch(':id')
   updateDeliveryState(@Param('id') id: string, @Body() state: State) {
     return this.deliveriesService.updateDeliveryState(+id, state);
   }
+  @Roles('ADMIN')
   @Patch(':id/assign')
   assignDelivery(
     @Param('id') id: string,
@@ -55,10 +62,12 @@ export class DeliveriesController {
     return this.deliveriesService.assignDelivery(+id, courierId);
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   deleteDelivery(@Param('id') id: string) {
     return this.deliveriesService.deleteDelivery(+id);
   }
+  @Roles('CLIENT')
   @Put(':id')
   updateDeliveryBeforeAssigned(
     @Request() req,

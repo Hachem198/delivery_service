@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useEffect } from "react";
-export default function Header() {
+export const Header = () => {
   useEffect(() => {
     // Add event listener for toggling the menu
     const menuButton = document.querySelector(
@@ -20,13 +20,13 @@ export default function Header() {
           {/*LOGO AND NAME IN THIS DIV*/}
           <div className="flex items-center lg:order-2">
             <a
-              href="#"
+              href="/login"
               className="text-white hover:bg-black focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2  focus:outline-none"
             >
               Se Connecter
             </a>
             <a
-              href="#"
+              href="/sign-up"
               className="text-white  hover:bg-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
             >
               S'incrire
@@ -81,14 +81,6 @@ export default function Header() {
               </li>
               <li>
                 <a
-                  href="/apropos"
-                  className="block py-2 pr-4 pl-3 text-white hover:text-black border-b border-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-black lg:p-0 dark:text-white lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  A propos
-                </a>
-              </li>
-              <li>
-                <a
                   href="/services"
                   className="block py-2 pr-4 pl-3 text-white hover:text-black border-b border-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-black lg:p-0 dark:text-white lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
                 >
@@ -109,4 +101,4 @@ export default function Header() {
       </nav>
     </header>
   );
-}
+};

@@ -2,10 +2,8 @@ import MessagesCard from "@/components/client/contact/MessagesCard";
 import { Message } from "primereact/message";
 export default function ContactPage() {
   return (
-    <div className="bg-[url('/images/vanPhoto.jpg')] bg-cover bg-center h-screen ">
-      <div className=" pt-36 ">
-        <MessagesCard></MessagesCard>
-      </div>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-stone-800 via-stone-700 to-stone-900">
+      <MessagesCard></MessagesCard>
     </div>
   );
 }
